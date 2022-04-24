@@ -16,6 +16,7 @@ export default NextAuth({
       }  
     }),
     // ...add more providers here
+    // Not saving users in db (yet)
   ],
   secret: process.env.SECRET
 })

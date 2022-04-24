@@ -51,10 +51,10 @@ export default function Movies({ movies }) {
 
 export async function getStaticProps(context) {
   const client = await clientPromise;
-  const db = await client.db("newProject");
+  const db = await client.db(process.env.MONGODB_DB);
 
   const movies = await db
-    .collection("new")
+    .collection(process.env.COLLECTION)
     .find()
     .sort({ metacritic: -1 })
     .limit(10)
