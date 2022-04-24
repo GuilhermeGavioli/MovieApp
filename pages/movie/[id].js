@@ -52,7 +52,7 @@ export default function Home({ movie }) {
       star_rating: starRating,
       movieID: movie.id,
     };
-    const res = await fetch(`http://localhost:3000/api/rating/addRating`, {
+    const res = await fetch(`${process.env.NEXTAUTH_URL}/api/rating/addRating`, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify(dataToBeSent),
@@ -241,7 +241,7 @@ export default function Home({ movie }) {
 
 export async function getStaticProps(context) {
   const id = context.params.id;
-  const res = await fetch(`http://localhost:3000/api/movie/${id}`);
+  const res = await fetch(`${process.env.NEXTAUTH_URL}/api/movie/${id}`);
   const data = await res.json();
   return {
     props: { movie: data },
