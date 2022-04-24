@@ -170,7 +170,7 @@ export default function Home({ movie }) {
         </Typography>
 
         <Button variant="contained">
-          <Link href="/movies">
+          <Link href="/">
             <a>Go back to movies</a>
           </Link>
         </Button>
