@@ -1,4 +1,4 @@
-import Image from "next/Image";
+import Image from "next/image";
 import companyLogo from "../public/companyLogo.ico";
 
 import { Box } from "@mui/material";
