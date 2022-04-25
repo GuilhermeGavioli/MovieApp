@@ -18,7 +18,7 @@ import { useState, useEffect } from "react";
 import { useRouter } from "next/router";
 import { signIn, useSession } from "next-auth/react";
 
-export default function Home({ movie }) {
+export default function Home({ movie, basePath}) {
   const { data: session } = useSession();
   const router = useRouter();
   const [ableVoting, setAbleVoting] = useState(false);
@@ -52,7 +52,7 @@ export default function Home({ movie }) {
       star_rating: starRating,
       movieID: movie.id,
     };
-    const res = await fetch(`${process.env.NEXTAUTH_URL}/api/rating/addRating`, {
+    const res = await fetch(`${basePath}/api/rating/addRating`, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify(dataToBeSent),
@@ -240,11 +240,12 @@ export default function Home({ movie }) {
 
 
 export async function getStaticProps(context) {
+  
   const id = context.params.id;
   const res = await fetch(`${process.env.NEXTAUTH_URL}/api/movie/${id}`);
   const data = await res.json();
   return {
-    props: { movie: data },
+    props: { movie: data, basePath: process.env.BASE_PATH},
     revalidate: 20,
   };
 }
