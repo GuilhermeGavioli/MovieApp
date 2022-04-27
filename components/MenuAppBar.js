@@ -14,12 +14,16 @@ import {
 import companyLogo from "../public/companyLogo.ico";
 
 import { useRouter } from "next/router";
+
 import { useContext } from "react";
+
 import { SidebarContext } from "./Layout/Layout";
 
 import { useSession, signIn, signOut } from "next-auth/react";
 
 export default function ButtonAppBar() {
+  const router = useRouter()
+
   const [sidebar, setSidebar] = useContext(SidebarContext);
   const { data: session } = useSession();
 
@@ -37,13 +41,13 @@ export default function ButtonAppBar() {
           >
             &#9776;
           </IconButton>
-          <div style={{ flexGrow: 0.03 }}>
-            <Image src={companyLogo} alt="logo" height={35} width={35} />
+          <div style={{ flexGrow: 0.03, width: 8, cursor: 'pointer'}} onClick={()=> router.push('/movies/1')}>
+            <Image src={companyLogo} alt="logo" height={35} width={35}/>
           </div>
           <Typography
             variant="h6"
             component="div"
-            sx={{ flexGrow: 1, fontSize: 17, fontWeight: 700 }}
+            sx={{ flexGrow: 1, fontSize: 17, fontWeight: 700, ml: 3 }}
           >
             MovieApp
           </Typography>

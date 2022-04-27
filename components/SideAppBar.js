@@ -1,3 +1,5 @@
+import Link from "next/link";
+
 import { Button, Box, Typography, Avatar } from "@mui/material";
 
 import { useSession } from "next-auth/react";
@@ -39,6 +41,15 @@ export default function SideAppBar() {
       ) : (
         <></>
       )}
+
+      { sidebar && session ? 
+      <Box sx={{margin: 'auto', width: 'fit-content', mt: 2}}>
+        <Link href={`/profile/${session?.user?.email.replace("@gmail.com", "")}`}><a><Button variant="outlined" sx={{fontWeight: 600}}>My Ratings</Button></a></Link>
+        </Box>
+        :
+        <></>
+      }
+
     </Box>
   );
 }
