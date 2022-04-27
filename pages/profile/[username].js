@@ -1,7 +1,25 @@
 import clientPromise from "../../lib/mongodb"
 
+import { Button } from "@mui/material"
+
+
 export default function username({votedMovies}) { 
-    console.log(votedMovies)
+    // console.log(votedMovies)
+    //change process.env.basepath to window.location.host *IMPORTANT*   
+
+    async function handleUpdate() { 
+        const urlRequest = `https://${window.location.host}/api/rating/addrating` //change this name to handlerating
+        console.log(urlRequest)
+        const res = await fetch(urlRequest, {
+            method: 'UPDATE',
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify(),
+        })
+        const data = await res.json();
+        
+  
+    }
+
 
     return (
 
@@ -11,6 +29,7 @@ export default function username({votedMovies}) {
                     <h1>{movie?.movie} ({ movie?.year})</h1>
                     <p>your rating for this movie was: {movie?.voters.rating}</p>
                     <p>your star r.for this movie was: {movie?.voters.star_rating}</p>
+                    <Button variant="contained" onClick={()=> handleUpdate()}>Update Vote</Button>
                 </div>
 
 

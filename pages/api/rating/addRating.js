@@ -45,4 +45,11 @@ export default async function Movies(req, res) {
         return res.json({ error: false, statusMsg: 'ok'});
 
     }
+
+
+    if (req.method == 'UPDATE') { 
+
+
+            
+    }
 }
