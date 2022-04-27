@@ -28,9 +28,7 @@ export default function FooterApp() {
           alt="logo"
           height={45}
           width={45}
-          style={{
-            filter: "grayScale(1)",
-          }}
+          
         />
       </Box>
     </Box>

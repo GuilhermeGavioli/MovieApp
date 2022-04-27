@@ -15,7 +15,7 @@ import {
 } from "@mui/material";
 
 import { useState, useEffect } from "react";
-import { useRouter } from "next/router";
+import { useRouter, Router } from "next/router";
 import { signIn, useSession } from "next-auth/react";
 
 export default function Home({ movie, basePath}) {
@@ -24,7 +24,7 @@ export default function Home({ movie, basePath}) {
   const [ableVoting, setAbleVoting] = useState(false);
   const [sliderValue, setSliderValue] = useState(75);
   const [starRating, setStarRating] = useState(3.5);
-  const [responseStatus, setResponseStatus] = useState();
+  const [responseErrorStatus, setResponseErrorStatus] = useState([]);
 
   let rating = 0;
   let starRatingCount = 0;
@@ -58,10 +58,11 @@ export default function Home({ movie, basePath}) {
       body: JSON.stringify(dataToBeSent),
     });
     const data = await res.json();
-    if (data.status == "ok") {
-      setResponseStatus(true);
+    console.log(data);
+    if (data.error == true) {
+      setResponseErrorStatus([data.error, data.statusMsg]);
     } else {
-      setResponseStatus(false);
+      setResponseErrorStatus([data.error, data.statusMsg]);
     }
   }
 
@@ -169,10 +170,10 @@ export default function Home({ movie, basePath}) {
           {movie?.description}
         </Typography>
 
-        <Button variant="contained">
-          <Link href="/">
-            <a>Go back to movies</a>
-          </Link>
+        <Button variant="contained" onClick={()=> router.back() }>
+         
+            Go back to movies
+        
         </Button>
 
         <Button
@@ -215,7 +216,7 @@ export default function Home({ movie, basePath}) {
             <></>
           )}
 
-          {responseStatus ? (
+          {responseErrorStatus[0] == false? (
             <Alert severity="success" sx={{ mt: 7, mb: 7 }}>
               <AlertTitle>Success</AlertTitle>
               Your rating has been <strong>successfully</strong> sent
@@ -224,10 +225,10 @@ export default function Home({ movie, basePath}) {
             <></>
           )}
 
-          {responseStatus === false ? (
+          {responseErrorStatus[0] ? (
             <Alert severity="error" sx={{ mt: 7, mb: 7 }}>
               <AlertTitle>Error</AlertTitle>
-              Your rating has <strong>failed</strong>. Please, try again.
+              Your rating has <strong>failed</strong>. {responseErrorStatus[1]}
             </Alert>
           ) : (
             <></>

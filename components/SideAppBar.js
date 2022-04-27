@@ -19,19 +19,17 @@ export default function SideAppBar() {
         transition: "0.2s",
         zIndex: 2,
       }}
-      style={sidebar ? { width: "240px" } : { width: 0 }}
+      style={sidebar ? { width: "220px" } : { width: 0 }}
     >
-      <Button
-        size="small"
-        color="error"
-        variant="contained"
-        sx={{ fontWeight: 600, float: "right", borderRadius: 0, width: "100%" }}
+      <button
+        
+        style={{ fontWeight: 600, float: "right", borderRadius: 0, border: 'none',  backgroundColor: 'unset'}}
         onClick={closeSidebar}
       >
         X
-      </Button>
+      </button>
       {sidebar && session ? (
-        <Box sx={{ mt: 8, width: "100%", textAlign: "center" }}>
+        <Box sx={{ mt: 8, width: "100%", textAlign: "center"}}>
           <Avatar
             sx={{ width: 60, height: 60, margin: "auto", mb: 2 }}
             src={session?.user?.image}
