@@ -1,25 +1,43 @@
 import clientPromise from '../../../lib/mongodb';
-import { getToken } from "next-auth/jwt"
+import { getToken,} from "next-auth/jwt"
+import { getSession } from "next-auth/react"
 
 export default async function Movies(req, res) {
-    const session = await getToken({ req, secret: process.env.SECRET })
-    // console.log(session)
-    
+    const client = await clientPromise;
+    const db = await client.db(process.env.MONGODB_DB);
+    const session = await getSession({ req })
+    let {userEmail} = req.body
+
+    // Check if the User is in the DB
+    const foundDBUser = await db.collection(process.env.USERS_COLLECTION).findOne({ email: session?.user?.email })
+    if (!foundDBUser) { 
+        return res.json({error: true, status: 'User does not exist!'})
+    }
+
+    //Check if there is session
+    if (!session) {
+        return res.json({ error: true, status: 'Not authorized' });
+    }
+    if (session?.user?.email != userEmail) { 
+        return res.json({ error: true, status: 'Not authorized' });
+    }
+
+
+
+
     //check if the user exists firts in the users collection
+    //check if there is session
+    //check if the user from getsession is the same as the user from the body request 
     //Get session in a better way *FIX
-    // if (!session) {
-    //     return res.json({ error: true, status: 'not authorized' });
-    // }
 
     
     
-    const client = await clientPromise;
-    const db = await client.db(process.env.MONGODB_DB);
 
     if (req.method === 'POST') {
 
-        let {user, rating, star_rating} = req.body
+        let { rating, star_rating} = req.body
         let { movieID } = req.body
+        console.log('uuuu ', userEmail)
         
         // if (session?.user?.email != user) {
         //     return res.json({ error: true, statusMsg: 'not authorized' });
@@ -31,7 +49,7 @@ export default async function Movies(req, res) {
         
         let check = false;
         await voters.map(vote => {
-            if (user == vote.user) {
+            if (userEmail == vote.user) {
                 check = true;
             }
         })
@@ -40,11 +58,7 @@ export default async function Movies(req, res) {
         }
 
         
-
-        
-        
-
-        voters.push({user, rating, star_rating})
+        voters.push({ rating, star_rating})
         await db.collection(process.env.COLLECTION).updateOne({ id: movieID }, { $set: {voters: voters}});
         
         return res.json({ error: false, statusMsg: 'ok'});
