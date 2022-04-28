@@ -1,14 +1,18 @@
 import clientPromise from "../../lib/mongodb"
 
 import { Button } from "@mui/material"
-import { useSession } from "next-auth/react"
+import { useSession, getSession } from "next-auth/react"
+
+import { useRouter } from "next/router";
+
 
 // `${window.location.host}/api/rating/addrating`
-export default function Username({votedMovies}) {
+export default function Username({ votedMovies }) {
+    const router = useRouter();
     const { data: session } = useSession();
     console.log(session)
     //change process.env.basepath to window.location.host *IMPORTANT*   
-
+    
     async function handleUpdate(movieID) { 
         const urlRequest = "http://localhost:3000/api/rating/addRating" //change this name to handlerating
         const res = await fetch(urlRequest, {
@@ -32,7 +36,12 @@ export default function Username({votedMovies}) {
                     <h1>{movie?.movie} ({ movie?.year})</h1>
                     <p>your rating for this movie was: {movie?.voters.rating}</p>
                     <p>your star r.for this movie was: {movie?.voters.star_rating}</p>
-                    <Button variant="contained" onClick={()=> handleUpdate(movie?.id)}>Update Vote</Button>
+
+                    {session?.user?.email == router.query.username + "@gmail.com" ?
+                        <Button variant="contained" onClick={()=> handleUpdate(movie?.id)}>Update Vote</Button>
+                        :
+                        <></>
+                    }
                 </div>
 
 
@@ -46,7 +55,7 @@ export default function Username({votedMovies}) {
 
 
 
-export async function getStaticPaths() { 
+export async function getStaticPaths() {
     //get all users profiles
     const client = await clientPromise
     const db = await client.db(process.env.MONGODB_DB);
@@ -61,7 +70,6 @@ export async function getStaticPaths() {
 
 export async function getStaticProps(context) {
     const username = context.params.username + "@gmail.com"
-    
     const client = await clientPromise;
     const db = await client.db(process.env.MONGODB_DB);
     const movies = await db.collection(process.env.COLLECTION).find().toArray();
@@ -78,7 +86,8 @@ export async function getStaticProps(context) {
     return {
         props: {
             votedMovies: JSON.parse(JSON.stringify(moviesWhichTheUserHasVoted))
-        }
+        },
+        revalidate: 20
     }
 
 }
