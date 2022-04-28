@@ -1,21 +1,24 @@
 import clientPromise from "../../lib/mongodb"
 
 import { Button } from "@mui/material"
+import { useSession } from "next-auth/react"
 
-
-export default function username({votedMovies}) { 
-    // console.log(votedMovies)
+// `${window.location.host}/api/rating/addrating`
+export default function Username({votedMovies}) {
+    const { data: session } = useSession();
+    console.log(session)
     //change process.env.basepath to window.location.host *IMPORTANT*   
 
-    async function handleUpdate() { 
-        const urlRequest = `https://${window.location.host}/api/rating/addrating` //change this name to handlerating
-        console.log(urlRequest)
+    async function handleUpdate(movieID) { 
+        const urlRequest = "http://localhost:3000/api/rating/addRating" //change this name to handlerating
         const res = await fetch(urlRequest, {
-            method: 'UPDATE',
+            method: 'PUT',
             headers: { "Content-Type": "application/json" },
-            body: JSON.stringify(),
+            body: JSON.stringify({ userEmail: session?.user?.email, newRating: 50, newStarRating: 2.5, movieID}),
         })
         const data = await res.json();
+        console.log(data)
+       
         
   
     }
@@ -29,7 +32,7 @@ export default function username({votedMovies}) {
                     <h1>{movie?.movie} ({ movie?.year})</h1>
                     <p>your rating for this movie was: {movie?.voters.rating}</p>
                     <p>your star r.for this movie was: {movie?.voters.star_rating}</p>
-                    <Button variant="contained" onClick={()=> handleUpdate()}>Update Vote</Button>
+                    <Button variant="contained" onClick={()=> handleUpdate(movie?.id)}>Update Vote</Button>
                 </div>
 
 
@@ -44,6 +47,15 @@ export default function username({votedMovies}) {
 
 
 export async function getStaticPaths() { 
+    //get all users profiles
+    const client = await clientPromise
+    const db = await client.db(process.env.MONGODB_DB);
+    const allUsers = await db.collection(process.env.USERS_COLLECTION).find().toArray();
+    const allUsersEmails = allUsers.map((user) => { 
+        return user.email
+    })
+    
+    console.log('aaalll ', allUsersEmails)
     return {paths: [], fallback: true}
 }
 

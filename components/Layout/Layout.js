@@ -31,7 +31,7 @@ export default function Layout(props) {
         {props.children}
           </Container>
           
-        <FooterApp/>
+      <FooterApp style={{zIndex: 5}}/>
       
     </SidebarContext.Provider>
   );

@@ -241,7 +241,8 @@ export default function Home({ movie, basePath}) {
 
 
 export async function getStaticProps(context) {
-  
+ 
+  console.log(context)
   const id = context.params.id;
   const res = await fetch(`${process.env.NEXTAUTH_URL}/api/movie/${id}`);
   const data = await res.json();

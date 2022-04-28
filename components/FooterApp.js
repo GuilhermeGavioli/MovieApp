@@ -18,6 +18,7 @@ export default function FooterApp() {
         height: "30vh",
         bgcolor: "rgb(15,15,15)",
         minHeight: "50px",
+        
       }}
       onClick={closeSidebar}
       style={router.isFallback ? { marginTop: "100vh" } : {}}
