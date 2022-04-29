@@ -1,4 +1,5 @@
 import Link from "next/link";
+import Image from "next/image";
 
 import { Button, Box, Typography, Avatar } from "@mui/material";
 
@@ -32,10 +33,8 @@ export default function SideAppBar() {
       </button>
       {sidebar && session ? (
         <Box sx={{ mt: 8, width: "100%", textAlign: "center"}}>
-          <Avatar
-            sx={{ width: 60, height: 60, margin: "auto", mb: 2 }}
-            src={session?.user?.image}
-          />
+          <Image width="60" height="60" alt="profpic" src={session?.user?.image}
+          style={{ borderRadius: '50%'}}/>
           <Typography sx={{ fontSize: 14 }}>{session?.user?.name}</Typography>
         </Box>
       ) : (

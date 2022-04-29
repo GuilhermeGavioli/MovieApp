@@ -1,27 +1,36 @@
-import clientPromise from "../../lib/mongodb"
+import Image from "next/image";
 
-import { Button } from "@mui/material"
-import { useSession, getSession } from "next-auth/react"
+
+
+
+import { Button, Avatar } from "@mui/material"
+import { useSession } from "next-auth/react"
 
 import { useRouter } from "next/router";
 
 
 // `${window.location.host}/api/rating/addrating`
-export default function Username({ votedMovies }) {
+export default function Username({ votedMovies, basepath, error, foundUser }) {
     const router = useRouter();
+    console.log(foundUser)
     const { data: session } = useSession();
-    console.log(session)
-    //change process.env.basepath to window.location.host *IMPORTANT*   
-    
+    if (error) { 
+        return <div>NO USER WITH THAT NAME</div>
+    }
+  
+
+    //change process.env.basepath to window.location.host *IMPORTANT*  
     async function handleUpdate(movieID) { 
-        const urlRequest = "http://localhost:3000/api/rating/addRating" //change this name to handlerating
+        const urlRequest = `${basepath}/api/rating/addRating` //change this name to handlerating
         const res = await fetch(urlRequest, {
             method: 'PUT',
             headers: { "Content-Type": "application/json" },
             body: JSON.stringify({ userEmail: session?.user?.email, newRating: 50, newStarRating: 2.5, movieID}),
         })
         const data = await res.json();
-        console.log(data)
+        if (data.error === false) { 
+            window.alert("Rating was updated succesfully");
+        }
        
         
   
@@ -29,9 +38,16 @@ export default function Username({ votedMovies }) {
 
 
     return (
+        <>          
+            <div style={{margin: 'auto', width:"120"}}>
+            {/* <Image src={foundUser?.image} height="120" width="120" alt="profpic" style={{borderRadius: '50%'}}/> */}
 
-        <>{votedMovies?.map(movie => { 
+            </div>
+            
+            {votedMovies?.map(movie => {
+                
             return (
+                
                 <div key={movie?.id}>
                     <h1>{movie?.movie} ({ movie?.year})</h1>
                     <p>your rating for this movie was: {movie?.voters.rating}</p>
@@ -43,12 +59,12 @@ export default function Username({ votedMovies }) {
                         <></>
                     }
                 </div>
-
-
-            )
-
-
-        })}</>
+           
+           
+           )
+        })}
+        
+        </>
     )
 }
 
@@ -57,37 +73,34 @@ export default function Username({ votedMovies }) {
 
 export async function getStaticPaths() {
     //get all users profiles
-    const client = await clientPromise
-    const db = await client.db(process.env.MONGODB_DB);
-    const allUsers = await db.collection(process.env.USERS_COLLECTION).find().toArray();
-    const allUsersEmails = allUsers.map((user) => { 
-        return user.email
-    })
-    
-    console.log('aaalll ', allUsersEmails)
-    return {paths: [], fallback: true}
+    // const client = await clientPromise
+    // const db = await client.db(process.env.MONGODB_DB);
+    // const allUsers = await db.collection(process.env.USERS_COLLECTION).find().toArray();
+    // const allUsersEmails = await allUsers.map((user) => { 
+    //     return { params: { username: user.email.split('@gmail.com')[0] } }
+    // })
+    return { paths: [], fallback: true }
+
 }
 
 export async function getStaticProps(context) {
-    const username = context.params.username + "@gmail.com"
-    const client = await clientPromise;
-    const db = await client.db(process.env.MONGODB_DB);
-    const movies = await db.collection(process.env.COLLECTION).find().toArray();
-    const moviesWhichTheUserHasVoted = []
-    movies.map(movie => {
-        movie.voters.map(vote => {
-            if (vote.user === username) {
-                moviesWhichTheUserHasVoted.push({ ...movie, voters: { rating: vote.rating, star_rating: vote.rating }})
-                
-            }
-            
-        })
-    })
-    return {
-        props: {
-            votedMovies: JSON.parse(JSON.stringify(moviesWhichTheUserHasVoted))
-        },
-        revalidate: 20
+    const username = context.params.username
+    const res = await fetch(`${process.env.BASE_PATH}/api/profile/${username}`)
+    const data = await res.json();
+    if (data.error) { 
+        return {
+            props: {error: data.error}
+        }
     }
 
+
+    return {
+        props: {
+                foundUser: { ...data.foundUser, email: ""}, 
+                votedMovies: data.moviesWhichTheUserHasVoted,
+                basepath: process.env.BASE_PATH
+            },
+            revalidate: 20
+    }
+    
 }

@@ -7,7 +7,8 @@ export default async function Movies(req, res) {
     const db = await client.db(process.env.MONGODB_DB);
     const session = await getSession({ req })
     let {userEmail} = req.body
-
+    console.log('usermeial ',userEmail)
+    console.log(session)
     // Check if the User is in the DB
     const foundDBUser = await db.collection(process.env.USERS_COLLECTION).findOne({ email: session?.user?.email })
     if (!foundDBUser) { 
@@ -44,21 +45,26 @@ export default async function Movies(req, res) {
         // }
         
 
-        const specificMovie = await db.collection(process.env.COLLECTION).find({ id: movieID }).toArray();
-        const voters = specificMovie[0].voters
-        
+        const specificMovie = await db.collection(process.env.COLLECTION).findOne({ id: movieID });
+        console.log(specificMovie)
+        const voters = specificMovie.voters
+        console.log(voters)
         let check = false;
+        
         await voters.map(vote => {
-            if (userEmail == vote.user) {
+            if (userEmail == vote.userEmail) {
+
                 check = true;
             }
         })
+        
+        console.log('check', check)
         if (check === true) { 
             return res.json({ error: true, statusMsg: "Users can vote only vote once for each Title!" });
         }
 
         
-        voters.push({ rating, star_rating})
+        voters.push({ userEmail, rating, star_rating})
         await db.collection(process.env.COLLECTION).updateOne({ id: movieID }, { $set: {voters: voters}});
         
         return res.json({ error: false, statusMsg: 'ok'});
@@ -85,7 +91,7 @@ export default async function Movies(req, res) {
 
         await db.collection(process.env.COLLECTION).updateOne({ id: movieID }, {$set: {voters: votes}})
         
-        return res.json({ received: true });
+        return res.json({ error: false, statusMsg: "Rating was updated succesfully" });
 
             
     }

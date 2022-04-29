@@ -1,6 +1,6 @@
 import clientPromise from '../../../lib/mongodb';
 
-export default async function Movies(req, response) {
+export default async function Movie(req, response) {
     const client = await clientPromise;
     const db = await client.db(process.env.MONGODB_DB);
     const id = req.query.id

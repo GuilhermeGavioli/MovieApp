@@ -45,9 +45,9 @@ export default function Home({ movie, basePath}) {
   };
 
   async function handleRatingRequest() {
-    const user = session?.user?.email;
+    const userEmail = session?.user?.email;
     const dataToBeSent = {
-      user,
+      userEmail,
       rating: sliderValue,
       star_rating: starRating,
       movieID: movie.id,
