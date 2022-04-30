@@ -25,7 +25,7 @@ export default function Layout(props) {
             transition: "ease-out 0.2s",
           minHeight: '170vh'
         }}
-        style={sidebar ? { filter: "blur(2px)" } : {}}
+        style={sidebar ? { filter: "blur(4px)" } : {}}
         onClick={closeSidebar}
       >
         {props.children}

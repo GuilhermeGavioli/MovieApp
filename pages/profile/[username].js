@@ -3,11 +3,13 @@ import Image from "next/image";
 
 
 
-import { Button, Avatar } from "@mui/material"
+import { Button, Avatar, Slider, Box, List, ListItem, Typography, Rating } from "@mui/material"
+import DeleteIcon from '@mui/icons-material/Delete';
+
 import { useSession } from "next-auth/react"
 
 import { useRouter } from "next/router";
-
+import { useState } from "react";
 
 // `${window.location.host}/api/rating/addrating`
 export default function Username({ votedMovies, basepath, error, foundUser }) {
@@ -38,33 +40,61 @@ export default function Username({ votedMovies, basepath, error, foundUser }) {
 
 
     return (
-        <>          
-            <div style={{margin: 'auto', width:"120"}}>
-            {/* <Image src={foundUser?.image} height="120" width="120" alt="profpic" style={{borderRadius: '50%'}}/> */}
+              
+            <div style={{width: '100%',height: '900px', margin: 'auto'}}>
+            
+            
+            <Box sx={{paddingTop: 10, width: '40%', margin: 'auto', mb: 8}}>
 
-            </div>
+                <Slider size="medium" valueLabelDisplay="on" />
+
+                <Rating
+                    size="medium"
+                    precision={0.5}
+                    name="valueHating"
+                    onChange={(e) => setStarRating(e.target.value)}
+                    sx={{mt: 3}}
+              />
+
+            </Box>
             
             {votedMovies?.map(movie => {
                 
-            return (
-                
-                <div key={movie?.id}>
-                    <h1>{movie?.movie} ({ movie?.year})</h1>
-                    <p>your rating for this movie was: {movie?.voters.rating}</p>
-                    <p>your star r.for this movie was: {movie?.voters.star_rating}</p>
+                return (
+                    <Box key={movie?.id} sx={{  bgcolor: 'white', width: '50%', mt: 1, mb: 1, padding: 1, margin: 'auto', '&:hover': {cursor: 'pointer', bgcolor: 'whitesmoke'}}}
 
-                    {session?.user?.email == router.query.username + "@gmail.com" ?
-                        <Button variant="contained" onClick={()=> handleUpdate(movie?.id)}>Update Vote</Button>
-                        :
-                        <></>
-                    }
-                </div>
+                    >
+                      
+                        <Box sx={{ display: 'flex', justifyContent: 'space-between' }}>
+                            <Box sx={{width: '30%', maxWidth: '30%'}}>
+                                <Typography sx={{whiteSpace:'nowrap',overflow: 'hidden', textOverflow:'ellipsis'}}>{movie?.movie} ({ movie?.year})</Typography>
+                            </Box>
+                            <Box sx={{width: '20%'}}>
+                                <Typography>Rating: {movie?.voters.rating}</Typography>
+                            </Box>
+                                <Box sx={{width: '20%'}}>
+                                <Typography>&#x2605;: {movie?.voters.star_rating}</Typography>
+                                </Box>
+                            <Box>
+                                {session?.user?.email == router.query.username + "@gmail.com" ?
+                                    <Button variant="text" size="small" onClick={()=> handleUpdate(movie?.id)}>Update Vote</Button>
+                                    :
+                                    <></>
+                                }
+                            </Box>
+                            <Box>
+                                <DeleteIcon/>
+                            </Box>
+                                {/* <Image height={80} width={50} alt="movieimg" src={movie?.img_src}/>  */}
+                        </Box>
+                        
            
            
+           </Box>
            )
         })}
-        
-        </>
+        </div>
+
     )
 }
 
