@@ -10,6 +10,7 @@ import {
   Rating,
   Stack,
   LinearProgress,
+  CircularProgress,
   Alert,
   AlertTitle,
 } from "@mui/material";
@@ -25,6 +26,7 @@ export default function Home({ movie, basePath}) {
   const [sliderValue, setSliderValue] = useState(65);
   const [starRating, setStarRating] = useState(3.5);
   const [responseErrorStatus, setResponseErrorStatus] = useState([]);
+  const [requestLoading, setRequestLoading] = useState(false);
 
   let rating = 0;
   let starRatingCount = 0;
@@ -45,6 +47,7 @@ export default function Home({ movie, basePath}) {
   };
 
   async function handleRatingRequest() {
+    setRequestLoading(true);
     const userEmail = session?.user?.email;
     const dataToBeSent = {
       userEmail,
@@ -63,6 +66,7 @@ export default function Home({ movie, basePath}) {
     } else {
       setResponseErrorStatus([data.error, data.statusMsg]);
     }
+    setRequestLoading(false);
   }
 
   if (router.isFallback) {
@@ -169,7 +173,7 @@ export default function Home({ movie, basePath}) {
           {movie?.description}
         </Typography>
 
-        <Button variant="contained" onClick={()=> router.back() }>
+        <Button sx={{fontWeight: 700}}variant="contained" onClick={()=> router.back() }>
          
             Go back to movies
         
@@ -177,7 +181,7 @@ export default function Home({ movie, basePath}) {
 
         <Button
           variant="text"
-          sx={{ float: "right" }}
+          sx={{ float: "right", fontWeight: 700}}
           onClick={() =>
             session ? setAbleVoting(!ableVoting) : signIn("google")
           }
@@ -216,15 +220,15 @@ export default function Home({ movie, basePath}) {
             <></>
           )}
 
-          {responseErrorStatus[0] == false? (
-            <Alert severity="success" sx={{ mt: 7, mb: 7 }}>
-              <AlertTitle>Success</AlertTitle>
-              Your rating has been <strong>successfully</strong> sent
-            </Alert>
-          ) : (
-            <></>
-          )}
-
+          
+            {responseErrorStatus[0] == false ? (
+              <Alert severity="success" sx={{ mt: 7, mb: 7 }}>
+                <AlertTitle>Success</AlertTitle>
+                Your rating has been <strong>successfully</strong> sent
+              </Alert>
+            ) : (
+              <></>
+            )}
           {responseErrorStatus[0] ? (
             <Alert severity="error" sx={{ mt: 7, mb: 7}}>
               <AlertTitle>Error</AlertTitle>
@@ -233,7 +237,10 @@ export default function Home({ movie, basePath}) {
           ) : (
             <></>
           )}
+
         </Box>
+
+        {requestLoading ? <Box sx={{display: 'flex', justifyContent:' center'}}><CircularProgress sx={{mt: 10, color: 'orange'}}/></Box> : <></>}
       </Box>
     </div>
   );

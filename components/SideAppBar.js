@@ -3,9 +3,15 @@ import Image from "next/image";
 
 import companyLogo from '../public/companyLogo.ico'
 
+
+
 import { Button, Box, Typography, Avatar, Paper, IconButton } from "@mui/material";
+import PersonIcon from '@mui/icons-material/Person';
+import LocalMoviesIcon from '@mui/icons-material/LocalMovies';
+import QuestionMarkIcon from '@mui/icons-material/QuestionMark';
 
 import { useSession } from "next-auth/react";
+import { useRouter } from "next/router";
 
 import { useContext } from "react";
 import { SidebarContext } from "./Layout/Layout";
@@ -13,9 +19,9 @@ import { SidebarContext } from "./Layout/Layout";
 export default function SideAppBar() {
   const [sidebar, setSidebar, closeSidebar] = useContext(SidebarContext);
   const { data: session } = useSession();
-
+  const router = useRouter();
   //sidebar-items styling
-  const sidebarLinks = { padding: '10px 50px 10px 50px', bgcolor: 'rgb(35,35,35)', boxShadow: '4px 3px 10px -4px gray', mt: 2}
+  const sidebarLinks = { padding: '5px 50px 5px 5px',borderBottom: '1px solid rgb(35,35,35)', mt: 2, display: 'flex', justifyContent: 'start', cursor: 'pointer'}
 
 
   return (
@@ -51,7 +57,9 @@ export default function SideAppBar() {
           </IconButton>
         <Box sx={{ mt: 1, width: "100%", textAlign: "center", color: 'rgb(80,80,80)'}}>
         <Link href={`/profile/${session?.user?.email.replace("@gmail.com", "")}`}><a><Image width="65" height="65" alt="profpic" src={session?.user?.image}
-              style={{ borderRadius: '50%'}} /></a></Link>
+              style={{ borderRadius: '50%' }} />
+            </a></Link>
+
           <Typography sx={{ fontSize: 14 }}><b>{session?.user?.name}</b></Typography>
           <Typography sx={{ fontSize: 11 }}>{session?.user?.email}</Typography>
           </Box>
@@ -60,21 +68,35 @@ export default function SideAppBar() {
         <></>
       )}
 
+<Box sx={{ fontWeight: 600, margin: 'auto', width: 'fit-content', mt: 3, width: '85%', color: "rgb(50,50,50)", textAlign: 'center',  height: 'fit-content'}}>
       { sidebar && session ? 
-        <Box sx={{ fontWeight: 600, margin: 'auto', width: 'fit-content', mt: 2, width: '92%', color: "whitesmoke", textAlign: 'center' }}>
+          <>
           
-          <Link href={`/profile/${session?.user?.email.replace("@gmail.com", "")}`}><a><Box sx={sidebarLinks}>Profile</Box></a></Link>
-          
-          <Link href='/movies/1'><a><Box sx={sidebarLinks}>Movies</Box></a></Link>
+         
+    
+            <Box sx={{...sidebarLinks}} onClick={() => router.push(`/profile/${session?.user?.email.replace("@gmail.com", "")}`)}>
+                  <PersonIcon/>
+                    <Typography sx={{ml: 1}}>Profile</Typography>
+            </Box>
+           
+            
+            <Box sx={{...sidebarLinks}}onClick={() => router.push("/movies/1")}>
+                    <LocalMoviesIcon/>
+              <Typography sx={{ml: 1}}>Movies</Typography>
+            </Box>
 
-          <Link href='/'><a><Box sx={sidebarLinks}>Empty</Box></a></Link>
-          
+            <Box sx={{...sidebarLinks}}onClick={() => router.push("/")}>
+                    <QuestionMarkIcon/>
+              <Typography sx={{ml: 1}}>Empty</Typography>
+            </Box>
+            
+          </>
+          :
+          <></>
+        }
         </Box>
-        :
-        <></>
-      }
 
-      <Box sx={{
+      {/* <Box sx={{
         margin: 'auto',
         display: 'flex',
         justifyContent: 'center',
@@ -84,7 +106,7 @@ export default function SideAppBar() {
       <Image src={companyLogo} alt="logo" height={50} width={50}
       />
 
-      </Box>
+      </Box> */}
 
     </Box>
   );

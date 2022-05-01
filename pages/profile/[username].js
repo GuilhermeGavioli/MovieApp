@@ -1,13 +1,12 @@
 import Image from "next/image";
-import Link from 'next/link'
+import Head from 'next/head'
 
 
 
-import { Button, Avatar, Slider, Box, List, ListItem, Typography, Rating, CircularProgress } from "@mui/material"
+import { Button, Avatar, Slider, Box, ListItem, Typography, Rating, CircularProgress } from "@mui/material"
 import DeleteIcon from '@mui/icons-material/Delete';
 
 import { useSession } from "next-auth/react"
-
 import { useRouter } from "next/router";
 import { useState } from "react";
 
@@ -18,6 +17,8 @@ export default function Username({ votedMovies, basepath, error, foundUser }) {
     const [starValue, setStarValue] = useState(3);
     const { data: session } = useSession();
     const router = useRouter();
+
+    
 
     if (router.isFallback) { 
         return(
@@ -32,9 +33,11 @@ export default function Username({ votedMovies, basepath, error, foundUser }) {
    
     if (error) { 
         return (
-            <Box sx={{ margin: 'auto', display: "flex", justifyContent: "center", alignItems: "center", padding: 15 }}>
+            <Box sx={{ margin: 'auto', display: "flex", flexDirection: 'column', alignItems: "center", padding: 15 }}>
                 <Box sx={{margin: 'auto'}}>
-                    <Typography sx={{textAlign: 'center'}}>User does not exit...</Typography>
+                    <Typography sx={{textAlign: 'center'}}>User {router.query.username} does not exit...</Typography>
+                </Box>
+                <Box sx={{margin: 'auto'}}>
                     <Button variant="contained" sx={{ mt: 3 }}  onClick={()=>router.push('/movies/1')}>Go to movies</Button>
                 </Box>
             </Box>
@@ -44,12 +47,14 @@ export default function Username({ votedMovies, basepath, error, foundUser }) {
      // If user has no ratings...
     if (votedMovies.length == 0) { 
         return (
-            <Box sx={{ margin: 'auto', display: "flex", justifyContent: "center", alignItems: "center", padding: 15 }}>
+            <Box sx={{ margin: 'auto', display: "flex", flexDirection:"column", alignItems: "center", padding: 15 }}>
                 <Box sx={{margin: 'auto'}}>
-                <Typography sx={{textAlign: 'center'}}>No ratings to be shown yet...</Typography>
+                <Typography sx={{textAlign: 'center'}}>{router.query.username} has no ratings to be shown yet...</Typography>
 
-               
-                    <Button variant="contained" sx={{ ml:4 ,mt: 3 }} onClick={()=>router.push('/movies/1')}>Go to movies</Button>
+        
+                </Box>
+                <Box sx={{margin: 'auto'}}>
+                    <Button variant="contained" sx={{ mt: 3 }} onClick={()=>router.push('/movies/1')}>Go to movies</Button>
                 </Box>
             </Box>
 
@@ -97,6 +102,15 @@ export default function Username({ votedMovies, basepath, error, foundUser }) {
     return (
               
         <div style={{ width: '100%', height: 'fit-content', margin: 'auto' }}>
+
+        <Head>
+                <title>Profile</title>
+        <link rel="icon" href="/companyLogo.ico" />  
+        <meta name="description" content=""></meta>
+        <meta name="keywords" content="Movie, Film, Rating, Profile"></meta>
+        </Head>
+
+
             
             
                 <Box sx={{paddingTop: 10, width: '40%', margin: 'auto', mb: 8}}>
@@ -152,11 +166,11 @@ export default function Username({ votedMovies, basepath, error, foundUser }) {
                                 <Typography>Rating: {movie?.voters?.rating}</Typography>
                             </Box>
                                 <Box sx={{width: '20%'}}>
-                                <Typography><span style={{color: 'orange', fontSize: 20}}>&#x272E;</span> {movie?.voters?.star_rating}</Typography>
+                                <Typography><span style={{color: 'orange', fontSize: 20}}>&#10030;</span> {movie?.voters?.star_rating}</Typography>
                                 </Box>
                             
                             <Box>
-                                <DeleteIcon sx={{ color: "rgb(150,150,150)" }} onClick={() => handleDelete(movie?.id, movie?.voters?.id)}/>
+                                <DeleteIcon sx={{ color: "rgb(120,120,120)" }} onClick={() => handleDelete(movie?.id, movie?.voters?.id)}/>
                             </Box>
                                 {/* <Image height={80} width={50} alt="movieimg" src={movie?.img_src}/>  */}
                         </Box>
@@ -166,7 +180,7 @@ export default function Username({ votedMovies, basepath, error, foundUser }) {
            </Box>
            )
             })}
-            <Button variant="contained" sx={{ float: 'right', mt: 3, bgcolor: 'rgb(253,70,4)', color: 'rgb(210,210,210)' }} onClick={ ()=> router.back()}>Go back</Button>
+            <Button variant="contained" sx={{ float: 'right', mt: 3, fontWeight: 700 }} onClick={ ()=> router.back()}>Go back to Movies</Button>
         </div>
 
     )

@@ -2,3 +2,9 @@ criar api com todos os usuarios e pagina de usuarios (com search bar) onde o usu
 e solicitar amizade caso estejam autenticado.
 
 adicionar proteçao contra nosql injection apis
+numero de requests pra cada client
+tamanho de cada requests
+checar tipo de dado
+
+
+
