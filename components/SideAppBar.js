@@ -19,7 +19,7 @@ export default function SideAppBar() {
         minHeight: "100vh",
         bgcolor: "whitesmoke",
         position: "fixed",
-        transition: "0.1s",
+        transition: "0.06s",
         zIndex: 2,
       }}
       style={sidebar ? { width: "220px" } : { width: 0 }}
@@ -45,8 +45,9 @@ export default function SideAppBar() {
           </IconButton>
         <Box sx={{ mt: 1, width: "100%", textAlign: "center"}}>
         <Link href={`/profile/${session?.user?.email.replace("@gmail.com", "")}`}><a><Image width="65" height="65" alt="profpic" src={session?.user?.image}
-              style={{ borderRadius: '50%' }} /></a></Link>
-          <Typography sx={{ fontSize: 16 }}><b>{session?.user?.name}</b></Typography>
+              style={{ borderRadius: '50%'}} /></a></Link>
+          <Typography sx={{ fontSize: 15 }}><b>{session?.user?.name}</b></Typography>
+          <Typography sx={{ fontSize: 12 }}>{session?.user?.email}</Typography>
           </Box>
           </>
       ) : (

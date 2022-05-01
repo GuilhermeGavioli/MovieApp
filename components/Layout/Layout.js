@@ -4,6 +4,7 @@ import MenuAppBar from "../MenuAppBar";
 import SideAppBar from "../SideAppBar";
 import FooterApp from '../FooterApp';
 
+
 import { useState } from "react";
 import { createContext } from "react";
 export const SidebarContext = createContext();
@@ -20,18 +21,30 @@ export default function Layout(props) {
       <Container
         maxWidth="lg"
         sx={{
-          bgcolor: "rgb(230,230,230)",
+          bgcolor: "rgb(240,240,240)",
           height: "fit-content",
             transition: "ease-out 0.2s",
           minHeight: '170vh'
+          ,
+          paddingBottom: 25
         }}
-        style={sidebar ? { filter: "blur(4px)" } : {}}
+        style={sidebar ? { filter: "opacity(65%)" } : {}}
         onClick={closeSidebar}
       >
         {props.children}
           </Container>
           
-      <FooterApp style={{zIndex: 5}}/>
+      <FooterApp />
+      
+      {/* here */}
+      
+{/* there */}
+
+
+
+
+
+
       
     </SidebarContext.Provider>
   );

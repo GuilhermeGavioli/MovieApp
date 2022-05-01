@@ -14,11 +14,11 @@ export default function FooterApp() {
   return (
     <Box
       sx={{
+       
         width: "100%",
         height: "30vh",
         bgcolor: "rgb(15,15,15)",
-        minHeight: "50px",
-        
+        minHeight: "60px",
       }}
       onClick={closeSidebar}
       style={router.isFallback ? { marginTop: "100vh" } : {}}

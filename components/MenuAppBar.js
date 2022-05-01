@@ -9,6 +9,7 @@ import {
   Toolbar,
   LinearProgress,
   CircularProgress,
+  Menu
 } from "@mui/material";
 
 import companyLogo from "../public/companyLogo.ico";
@@ -41,28 +42,37 @@ export default function ButtonAppBar() {
           >
             &#9776;
           </IconButton>
-          <div style={{ flexGrow: 0.03, width: 8, cursor: 'pointer'}} onClick={()=> router.push('/movies/1')}>
-            <Image src={companyLogo} alt="logo" height={35} width={35}/>
-          </div>
-          <Typography
-            variant="h6"
-            component="div"
-            sx={{ flexGrow: 1, fontSize: 17, fontWeight: 700, ml: 3 }}
-          >
-            MovieApp
-          </Typography>
 
-          <Button
-            color="inherit"
-            size="large"
-            variant="text"
-            sx={{ fontWeight: 700 }}
-            onClick={() => {
-              !session ? signIn("google") : signOut();
-            }}
-          >
-            {session ? "Logout" : "Login"}
-          </Button>
+
+          <Box sx={{ width: '12%', cursor: 'pointer', ml: 5, display: 'flex', justifyContent: 'center', alignItems: 'center'}} onClick={()=> router.push('/movies/1')}>
+            <Image src={companyLogo} alt="logo" height={30} width={30} style={{margin: 'auto', }}/>
+            <Typography
+              variant="h6"
+              component="div"
+              sx={{ flexGrow: 1, fontSize: 17, fontWeight: 700, ml: 2}}
+            >
+              MovieApp
+            </Typography>
+          </Box>
+          <Box sx={{width: '60%'}}>
+            {/* <Typography>something</Typography> */}
+          </Box>
+
+          <Box sx={{ width: '25%', float: 'right' }}>
+            <Button
+              color="inherit"
+              size="large"
+              variant="text"
+              sx={{ fontWeight: 700, float: 'right' }}
+              onClick={() => {
+                !session ? signIn("google") : signOut();
+              }}
+            >
+              {session ? "Logout" : "Login"}
+            </Button>
+
+
+          </Box>
         </Toolbar>
       </AppBar>
     </Box>
