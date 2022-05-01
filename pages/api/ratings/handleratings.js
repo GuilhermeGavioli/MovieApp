@@ -8,8 +8,8 @@ export default async function Movies(req, res) {
     const db = await client.db(process.env.MONGODB_DB);
     const session = await getSession({ req })
     let {userEmail} = req.body
-   
-
+    
+    
     // Check if the User is in the DB
     const foundDBUser = await db.collection(process.env.USERS_COLLECTION).findOne({ email: session?.user?.email })
     if (!foundDBUser) { 
@@ -40,10 +40,6 @@ export default async function Movies(req, res) {
         let { rating, star_rating} = req.body
         let { movieID } = req.body
         
-        
-        // if (session?.user?.email != user) {
-        //     return res.json({ error: true, statusMsg: 'not authorized' });
-        // }
         
 
         const specificMovie = await db.collection(process.env.COLLECTION).findOne({ id: movieID });

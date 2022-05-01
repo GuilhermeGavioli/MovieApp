@@ -4,27 +4,24 @@ import Link from "next/link";
 
 import BasicCard from "../../components/BasicCard";
 
-import {Grid, Box, ButtonGroup, Button} from "@mui/material";
+import { Grid, Box, ButtonGroup, Button } from "@mui/material";
 import { useRouter } from "next/router";
-import { useEffect, useState } from "react";
 
 export default function Movies({ movies }) {
-  // const [movies, setMovies] = useState();
   const page = useRouter().query.page;
 
-
-
   return (
-    <div style={{paddingBottom: 50}}>
+    <div style={{ paddingBottom: 50 }}>
       <Head>
         <title>Movies</title>
-        <link rel="icon" href="/companyLogo.ico" />  
-        <meta name="description" content="Movies Web Application where users can vote and increase or decrease the films rating by loging in and clicking on 'vote' button"></meta>
+        <link rel="icon" href="/companyLogo.ico" />
+        <meta
+          name="description"
+          content="Movies Web Application where users can vote and increase or decrease the films rating by loging in and clicking on 'vote' button"
+        ></meta>
         <meta name="keywords" content="Movie, Film, Rating"></meta>
-
-
       </Head>
-    {/* try to add layout here once pages are similar */}
+      
       <Box
         sx={{
           width: "100%",
@@ -52,48 +49,65 @@ export default function Movies({ movies }) {
             return <BasicCard key={movie?.id} movie={movie} />;
           })}
         </Grid>
-
-
-
-
       </Box>
-      <div style={{width: '15%', margin: 'auto', display: 'flex'}}>
-
-      <ButtonGroup sx={{display: 'flex', justifyContent:"space-between", borderRadius: '0'}}  variant="outlined">
-          <Link href="/movies/1"><a><Button variant={page == "1" ? "contained" : "outlined"} sx={{mr: 1 }}>1</Button></a></Link>
-          <Link href="/movies/2"><a><Button variant={page == "2" ? "contained" : "outlined"} sx={{mr: 1 }}>2</Button></a></Link>
-          <Link href="/movies/3"><a><Button variant={page == "3" ? "contained" : "outlined"} sx={{mr: 1 }}>3</Button></a></Link>
-          {/* <Link href="/4"><a><Button variant={page == "4" ? "contained" : "outlined"}>4</Button></a></Link> */}
+      <div style={{ width: "15%", margin: "auto", display: "flex" }}>
+        <ButtonGroup
+          sx={{
+            display: "flex",
+            justifyContent: "space-between",
+            borderRadius: "0",
+          }}
+          variant="outlined"
+        >
+          <Link href="/movies/1">
+            <a>
+              <Button
+                variant={page == "1" ? "contained" : "outlined"}
+                sx={{ mr: 1 }}
+              >
+                1
+              </Button>
+            </a>
+          </Link>
+          <Link href="/movies/2">
+            <a>
+              <Button
+                variant={page == "2" ? "contained" : "outlined"}
+                sx={{ mr: 1 }}
+              >
+                2
+              </Button>
+            </a>
+          </Link>
+          <Link href="/movies/3">
+            <a>
+              <Button
+                variant={page == "3" ? "contained" : "outlined"}
+                sx={{ mr: 1 }}
+              >
+                3
+              </Button>
+            </a>
+          </Link>
         </ButtonGroup>
-
-        </div>
-
-
+      </div>
     </div>
   );
 }
 
-export async function getStaticPaths() { 
+export async function getStaticPaths() {
   return {
-
     paths: [
       { params: { page: "1" } },
       { params: { page: "2" } },
       { params: { page: "3" } },
-      
-      
     ],
     fallback: false,
-
-  }
-
-
+  };
 }
 
-
-
 export async function getStaticProps(context) {
-  const page = context.params.page
+  const page = context.params.page;
   const client = await clientPromise;
   const db = await client.db(process.env.MONGODB_DB);
 
@@ -105,7 +119,7 @@ export async function getStaticProps(context) {
     .toArray();
   const data = JSON.parse(JSON.stringify(movies));
   let data2;
-  switch (page) { 
+  switch (page) {
     case "1":
       data2 = data.slice(0, 15);
       break;
@@ -116,7 +130,6 @@ export async function getStaticProps(context) {
       data2 = data.slice(30, 45);
       break;
   }
-  
 
   return {
     props: {

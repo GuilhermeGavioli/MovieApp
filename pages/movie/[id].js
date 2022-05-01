@@ -1,8 +1,9 @@
 import Head from "next/head";
-import Link from "next/link";
 import Image from "next/image";
 
 import StarIcon from '@mui/icons-material/Star';
+
+import clientPromise from "../../lib/mongodb";
 
 import {
   Button,
@@ -17,8 +18,8 @@ import {
   AlertTitle,
 } from "@mui/material";
 
-import { useState, useEffect } from "react";
-import { useRouter, Router } from "next/router";
+import { useState } from "react";
+import { useRouter } from "next/router";
 import { signIn, useSession } from "next-auth/react";
 
 export default function Home({ movie, basePath}) {
@@ -57,7 +58,7 @@ export default function Home({ movie, basePath}) {
       star_rating: starRating,
       movieID: movie.id,
     };
-    const res = await fetch(`${basePath}/api/rating/addRating`, {
+    const res = await fetch(`${basePath}/api/ratings/handleratings`, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify(dataToBeSent),
@@ -93,10 +94,6 @@ export default function Home({ movie, basePath}) {
         <meta name="description" content="Here you can find a Specific Movie" />
         <meta name="keywords" content={`Movie, Film, ${movie?.movie}`}></meta>
         <link rel="icon" href="/companyLogo.ico" />
-        {/* <link
-          rel="stylesheet"
-          href="https://fonts.googleapis.com/css?family=Roboto:300,400,500,700&display=swap"
-        /> */}
       </Head>
 
       <Box
@@ -251,27 +248,25 @@ export default function Home({ movie, basePath}) {
 
 export async function getStaticProps(context) {
  
- 
-  const id = context.params.id;
-  const res = await fetch(`${process.env.NEXTAUTH_URL}/api/movie/${id}`);
-  const data = await res.json();
+
+  const client = await clientPromise;
+  const db = await client.db(process.env.MONGODB_DB);
+  const FoundMovie = await db.collection(process.env.COLLECTION).find({ id: context.params.id }).toArray();
   return {
-    props: { movie: data, basePath: process.env.BASE_PATH},
+    props: {movie: JSON.parse(JSON.stringify(FoundMovie[0])), basePath: process.env.BASE_PATH},
     revalidate: 20,
   };
 }
 
 export async function getStaticPaths() {
-  
+  const client = await clientPromise;
+  const db = await client.db(process.env.MONGODB_DB);
+  const movies = await db.collection(process.env.COLLECTION).find().limit(10000).toArray();
+  const ids = await movies.map(movie => { 
+    return { params: { id: movie.id } }
+  })
   return {
-    paths: [
-      // {
-      //   params: { id: "1" },
-      // },
-      // {
-      //   params: { id: "2" },
-      // }
-    ],
-    fallback: true,
+    paths: ids,
+    fallback: false,
   };
 }
