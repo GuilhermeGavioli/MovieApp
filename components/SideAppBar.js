@@ -1,8 +1,6 @@
 import Link from "next/link";
 import Image from "next/image";
 
-import companyLogo from '../public/companyLogo.ico'
-
 
 
 import { Button, Box, Typography, Avatar, Paper, IconButton } from "@mui/material";
@@ -96,18 +94,7 @@ export default function SideAppBar() {
         }
         </Box>
 
-      {/* <Box sx={{
-        margin: 'auto',
-        display: 'flex',
-        justifyContent: 'center',
-        alignItems: 'center',
-        height: '70%'
-      }}>
-      <Image src={companyLogo} alt="logo" height={50} width={50}
-      />
-
-      </Box> */}
-
+     
     </Box>
   );
 }

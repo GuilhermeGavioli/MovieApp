@@ -13,23 +13,6 @@ export default function Movies({ movies }) {
   const page = useRouter().query.page;
 
 
-  // useEffect(() => {
-  //   switch (router.query.page) { 
-  //     case "1":
-  //       setMovies(films.slice(0, 15));
-  //       break;
-  //     case "2":
-  //       setMovies(films.slice(16, 31));
-  //       break;
-  //     case "3":
-  //       setMovies(films.slice(31, 46));
-  //       break;
-  //   }
-
-
-  // }, [])
-
-
 
   return (
     <div style={{paddingBottom: 50}}>

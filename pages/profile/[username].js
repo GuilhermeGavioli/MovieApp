@@ -2,7 +2,7 @@ import Image from "next/image";
 import Head from 'next/head'
 
 
-
+import StarIcon from '@mui/icons-material/Star';
 import { Button, Avatar, Slider, Box, ListItem, Typography, Rating, CircularProgress } from "@mui/material"
 import DeleteIcon from '@mui/icons-material/Delete';
 
@@ -166,7 +166,7 @@ export default function Username({ votedMovies, basepath, error, foundUser }) {
                                 <Typography>Rating: {movie?.voters?.rating}</Typography>
                             </Box>
                                 <Box sx={{width: '20%'}}>
-                                <Typography><span style={{color: 'orange', fontSize: 20}}>&#10030;</span> {movie?.voters?.star_rating}</Typography>
+                                <Typography sx={{ display: 'flex', alignItems: 'center', justifyContent: 'flex-start' }}><span style={{ color: 'orange', fontSize: 5}}><StarIcon /></span><span>{movie?.voters?.star_rating}</span></Typography>
                                 </Box>
                             
                             <Box>
@@ -180,7 +180,7 @@ export default function Username({ votedMovies, basepath, error, foundUser }) {
            </Box>
            )
             })}
-            <Button variant="contained" sx={{ float: 'right', mt: 3, fontWeight: 700 }} onClick={ ()=> router.back()}>Go back to Movies</Button>
+            <Button variant="contained" sx={{ float: 'right', mt: 3, fontWeight: 700 }} onClick={ ()=> router.push('/movies/1')}>Go back to Movies</Button>
         </div>
 
     )
@@ -217,7 +217,7 @@ export async function getStaticProps(context) {
                 votedMovies: data.moviesWhichTheUserHasVoted,
                 basepath: process.env.BASE_PATH
             },
-            revalidate: 20
+            revalidate: 10
     }
     
 }

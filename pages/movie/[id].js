@@ -2,6 +2,8 @@ import Head from "next/head";
 import Link from "next/link";
 import Image from "next/image";
 
+import StarIcon from '@mui/icons-material/Star';
+
 import {
   Button,
   Box,
@@ -164,8 +166,8 @@ export default function Home({ movie, basePath}) {
             {movie?.voters?.map((vote) => {
               starRatingCount = starRatingCount + vote?.star_rating;
             })}
-            <Typography mt={1} mb={1.5}>
-            <span style={{color: 'orange', fontSize: 20}}>&#x272E;</span> {parseFloat(starRatingCount / movie?.voters?.length)}
+            <Typography mt={1} mb={1.5} sx={{display: 'flex', alignItems:'center', justifyContent: 'flex-start' }}>
+              <span style={{ color: 'orange', fontSize: 4}}><StarIcon/></span>{parseFloat(starRatingCount / movie?.voters?.length)}
             </Typography>
           </div>
         </div>
