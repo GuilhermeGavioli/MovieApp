@@ -22,7 +22,7 @@ export default function Home({ movie, basePath}) {
   const { data: session } = useSession();
   const router = useRouter();
   const [ableVoting, setAbleVoting] = useState(false);
-  const [sliderValue, setSliderValue] = useState(75);
+  const [sliderValue, setSliderValue] = useState(65);
   const [starRating, setStarRating] = useState(3.5);
   const [responseErrorStatus, setResponseErrorStatus] = useState([]);
 
@@ -58,7 +58,6 @@ export default function Home({ movie, basePath}) {
       body: JSON.stringify(dataToBeSent),
     });
     const data = await res.json();
-    console.log(data);
     if (data.error == true) {
       setResponseErrorStatus([data.error, data.statusMsg]);
     } else {
@@ -76,7 +75,7 @@ export default function Home({ movie, basePath}) {
           color: "rgb(253,70, 4)",
         }}
       >
-        <LinearProgress color="error" />
+        <LinearProgress sx={{color: 'orange', bgcolor: 'orange'}} />
       </Stack>
     );
   }
@@ -155,14 +154,14 @@ export default function Home({ movie, basePath}) {
               Genre: {movie?.genre}
             </Typography>
             <Typography mt={1} mb={1.5}>
-              Rating Average: {parseInt(rating / movie?.voters?.length)}
+              Rating: {parseInt(rating / movie?.voters?.length)}
             </Typography>
 
             {movie?.voters?.map((vote) => {
               starRatingCount = starRatingCount + vote?.star_rating;
             })}
             <Typography mt={1} mb={1.5}>
-              Stars Average: {parseInt(starRatingCount / movie?.voters?.length)}
+            <span style={{color: 'orange', fontSize: 20}}>&#x272E;</span> {parseFloat(starRatingCount / movie?.voters?.length)}
             </Typography>
           </div>
         </div>
@@ -190,9 +189,9 @@ export default function Home({ movie, basePath}) {
           {ableVoting ? (
             <>
               <Slider
-                sx={{ mb: 2 }}
+                sx={{ mb: 2, color: 'orange' }}
                 valueLabelDisplay="on"
-                defaultValue={50}
+                defaultValue={65}
                 onChange={(e) => setSliderValue(e.target.value)}
               />
 
@@ -200,13 +199,14 @@ export default function Home({ movie, basePath}) {
                 size="large"
                 precision={0.5}
                 name="valueHating"
+                defaultValue={3.5}
                 onChange={(e) => setStarRating(e.target.value)}
               />
 
               <Button
                 variant="contained"
-                color="success"
-                sx={{ float: "right" }}
+                
+                sx={{ float: "right",}}
                 onClick={() => handleRatingRequest()}
               >
                 send
@@ -226,7 +226,7 @@ export default function Home({ movie, basePath}) {
           )}
 
           {responseErrorStatus[0] ? (
-            <Alert severity="error" sx={{ mt: 7, mb: 7 }}>
+            <Alert severity="error" sx={{ mt: 7, mb: 7}}>
               <AlertTitle>Error</AlertTitle>
               Your rating has <strong>failed</strong>. {responseErrorStatus[1]}
             </Alert>
@@ -242,7 +242,7 @@ export default function Home({ movie, basePath}) {
 
 export async function getStaticProps(context) {
  
-  console.log(context)
+ 
   const id = context.params.id;
   const res = await fetch(`${process.env.NEXTAUTH_URL}/api/movie/${id}`);
   const data = await res.json();

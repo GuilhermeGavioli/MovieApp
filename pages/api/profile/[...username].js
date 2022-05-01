@@ -5,10 +5,9 @@ export default async function Profile(req, res) {
     const db = client.db(process.env.MONGODB_DB)
    
     const userEmail = req.query.username + "@gmail.com"
-    console.log(userEmail)
     const foundUser = JSON.parse(JSON.stringify(await db.collection(process.env.USERS_COLLECTION).findOne({ email: userEmail })));
 
-    if (!foundUser) { 
+    if (!foundUser) {
         return res.json({error: true, statusMsg: "No user found with that name"})
     }
 
@@ -17,11 +16,13 @@ export default async function Profile(req, res) {
     const moviesWhichTheUserHasVoted = []
     movies.map(movie => {
         movie.voters.map(vote => {
-            if (vote.user === userEmail) {
-                moviesWhichTheUserHasVoted.push({ ...movie, voters: { rating: vote.rating, star_rating: vote.rating }}) 
+            if (vote.userEmail === userEmail) {
+                moviesWhichTheUserHasVoted.push({ ...movie, voters: { rating: vote.rating, star_rating: vote.star_rating }}) 
             }
         })
     })
+
+
 
     return res.json({ foundUser, moviesWhichTheUserHasVoted  })
 

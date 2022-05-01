@@ -14,7 +14,6 @@ export default function Movies({ movies }) {
 
 
   // useEffect(() => {
-  //   console.log(router.query)
   //   switch (router.query.page) { 
   //     case "1":
   //       setMovies(films.slice(0, 15));
@@ -78,9 +77,9 @@ export default function Movies({ movies }) {
       <div style={{width: '15%', margin: 'auto', display: 'flex'}}>
 
       <ButtonGroup sx={{display: 'flex', justifyContent:"space-between", borderRadius: '0'}}  variant="outlined">
-          <Link href="/movies/1"><a><Button variant={page == "1" ? "contained" : "outlined"} sx={{mr: 1}}>1</Button></a></Link>
-          <Link href="/movies/2"><a><Button variant={page == "2" ? "contained" : "outlined"} sx={{mr: 1}}>2</Button></a></Link>
-          <Link href="/movies/3"><a><Button variant={page == "3" ? "contained" : "outlined"} sx={{mr: 1,}}>3</Button></a></Link>
+          <Link href="/movies/1"><a><Button variant={page == "1" ? "contained" : "outlined"} sx={{mr: 1 }}>1</Button></a></Link>
+          <Link href="/movies/2"><a><Button variant={page == "2" ? "contained" : "outlined"} sx={{mr: 1 }}>2</Button></a></Link>
+          <Link href="/movies/3"><a><Button variant={page == "3" ? "contained" : "outlined"} sx={{mr: 1 }}>3</Button></a></Link>
           {/* <Link href="/4"><a><Button variant={page == "4" ? "contained" : "outlined"}>4</Button></a></Link> */}
         </ButtonGroup>
 
