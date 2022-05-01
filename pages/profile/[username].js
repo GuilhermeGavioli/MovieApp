@@ -16,22 +16,43 @@ export default function Username({ votedMovies, basepath, error, foundUser }) {
     const [showRatingBox, setShowRatingBox] = useState([]);
     const [sliderValue, setSliderValue] = useState(65);
     const [starValue, setStarValue] = useState(3);
-
-
- 
-
-    const router = useRouter();
-   
     const { data: session } = useSession();
-    if (error) { 
-        return <div>NO USER WITH THAT NAME</div>
-    }
+    const router = useRouter();
 
     if (router.isFallback) { 
         return(
             <Box sx={{margin: 'auto', display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
                 <CircularProgress sx={{mt: 15, color: 'orange'}} />
             </Box>
+        )
+    }
+
+ 
+
+   
+    if (error) { 
+        return (
+            <Box sx={{ margin: 'auto', display: "flex", justifyContent: "center", alignItems: "center", padding: 15 }}>
+                <Box sx={{margin: 'auto'}}>
+                    <Typography sx={{textAlign: 'center'}}>User does not exit...</Typography>
+                    <Button variant="contained" sx={{ mt: 3 }}  onClick={()=>router.push('/movies/1')}>Go to movies</Button>
+                </Box>
+            </Box>
+        )
+    }
+
+     // If user has no ratings...
+    if (votedMovies.length == 0) { 
+        return (
+            <Box sx={{ margin: 'auto', display: "flex", justifyContent: "center", alignItems: "center", padding: 15 }}>
+                <Box sx={{margin: 'auto'}}>
+                <Typography sx={{textAlign: 'center'}}>No ratings to be shown yet...</Typography>
+
+               
+                    <Button variant="contained" sx={{ ml:4 ,mt: 3 }} onClick={()=>router.push('/movies/1')}>Go to movies</Button>
+                </Box>
+            </Box>
+
         )
     }
   
@@ -70,6 +91,8 @@ export default function Username({ votedMovies, basepath, error, foundUser }) {
         }
     }
 
+    
+    
 
     return (
               

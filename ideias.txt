@@ -1,0 +1,4 @@
+criar api com todos os usuarios e pagina de usuarios (com search bar) onde o usuario podera acessar o perfil de outros usuarios
+e solicitar amizade caso estejam autenticado.
+
+adicionar proteçao contra nosql injection apis

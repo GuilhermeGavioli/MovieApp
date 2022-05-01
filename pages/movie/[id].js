@@ -87,10 +87,10 @@ export default function Home({ movie, basePath}) {
         <meta name="description" content="Here you can find a Specific Movie" />
         <meta name="keywords" content={`Movie, Film, ${movie?.movie}`}></meta>
         <link rel="icon" href="/companyLogo.ico" />
-        <link
+        {/* <link
           rel="stylesheet"
           href="https://fonts.googleapis.com/css?family=Roboto:300,400,500,700&display=swap"
-        />
+        /> */}
       </Head>
 
       <Box
