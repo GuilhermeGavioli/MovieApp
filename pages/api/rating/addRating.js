@@ -1,6 +1,7 @@
 import clientPromise from '../../../lib/mongodb';
 
 import { getSession } from "next-auth/react"
+import { v4 as uuidv4 } from 'uuid';
 
 export default async function Movies(req, res) {
     const client = await clientPromise;
@@ -46,6 +47,7 @@ export default async function Movies(req, res) {
         
 
         const specificMovie = await db.collection(process.env.COLLECTION).findOne({ id: movieID });
+        if (!specificMovie) return res.json({error: true, statusMsg: 'Sorry, no movie with that id was found'})
       
         const voters = specificMovie.voters
     
@@ -63,7 +65,7 @@ export default async function Movies(req, res) {
         }
 
         
-        voters.push({ userEmail, rating, star_rating})
+        voters.push({id: uuidv4(), userEmail, rating, star_rating})
         await db.collection(process.env.COLLECTION).updateOne({ id: movieID }, { $set: {voters: voters}});
         
         return res.json({ error: false, statusMsg: 'ok'});
@@ -76,6 +78,8 @@ export default async function Movies(req, res) {
 
         const { userEmail, newRating, newStarRating, movieID } = req.body
         const foundMovie = await db.collection(process.env.COLLECTION).find({ id: movieID }).toArray();
+        if (!foundMovie) return res.json({error: true, statusMsg: 'Sorry, no movie with that id was found'})
+
         const votes = foundMovie[0].voters
         votes.map(vote => {
             if (vote.userEmail === userEmail) {
@@ -89,4 +93,38 @@ export default async function Movies(req, res) {
 
             
     }
+
+    if (req.method === 'DELETE') {
+
+        const { id, movieID } = req.body
+        
+        const foundMovie = await db.collection(process.env.COLLECTION).find({ id: movieID }).toArray();
+        if (!foundMovie) return res.json({error: true, statusMsg: 'Sorry, no movie with that id was found'})
+
+
+        const votes = foundMovie[0].voters
+        let check = false;
+        const newVotes = await votes.map(vote => {
+            if (vote.userEmail === userEmail && vote.id === id) {
+                check = true;
+            } else {
+                return vote
+            }
+        })
+        //eliminar items undefined ta novaArray
+        const newestVotes = await newVotes.filter(item => {
+            if (item != undefined) return item
+        })
+     
+        if (check) { 
+            await db.collection(process.env.COLLECTION).updateOne({ id: movieID }, { $set: {voters: newestVotes}});
+            return res.json({ error: false, statusMsg: 'ok'});
+
+        }
+
+        res.json({error: true, statusMsg: 'Ops, something went wrong...'})
+    }
+
+
+
 }

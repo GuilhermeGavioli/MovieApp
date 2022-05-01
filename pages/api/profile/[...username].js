@@ -17,7 +17,7 @@ export default async function Profile(req, res) {
     movies.map(movie => {
         movie.voters.map(vote => {
             if (vote.userEmail === userEmail) {
-                moviesWhichTheUserHasVoted.push({ ...movie, voters: { rating: vote.rating, star_rating: vote.star_rating }}) 
+                moviesWhichTheUserHasVoted.push({ ...movie, voters: { id: vote.id, rating: vote.rating, star_rating: vote.star_rating }}) 
             }
         })
     })

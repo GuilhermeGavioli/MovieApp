@@ -51,15 +51,29 @@ export default function Username({ votedMovies, basepath, error, foundUser }) {
         } else { 
             window.alert("request failed. Try again")
         }
-       
-        
-  
+    }
+
+    async function handleDelete(movieID, ratingID) { 
+        console.log(ratingID)
+        console.log(movieID)
+        const urlRequest = `${basepath}/api/rating/addRating` //change this name to handlerating
+        const res = await fetch(urlRequest, {
+            method: 'DELETE',
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ userEmail: session?.user?.email, movieID, id: ratingID}),
+        })
+        const data = await res.json();
+        if (data.error === false) {
+            window.alert("Succefully deleted");
+        } else { 
+            window.alert("request failed. Try again")
+        }
     }
 
 
     return (
               
-        <div style={{ width: '100%', height: '900px', margin: 'auto' }}>
+        <div style={{ width: '100%', height: 'fit-content', margin: 'auto' }}>
             
             
                 <Box sx={{paddingTop: 10, width: '40%', margin: 'auto', mb: 8}}>
@@ -119,7 +133,7 @@ export default function Username({ votedMovies, basepath, error, foundUser }) {
                                 </Box>
                             
                             <Box>
-                                <DeleteIcon sx={{ color:"rgb(150,150,150)" }}/>
+                                <DeleteIcon sx={{ color: "rgb(150,150,150)" }} onClick={() => handleDelete(movie?.id, movie?.voters?.id)}/>
                             </Box>
                                 {/* <Image height={80} width={50} alt="movieimg" src={movie?.img_src}/>  */}
                         </Box>
@@ -144,11 +158,10 @@ export async function getStaticPaths() {
     // const db = await client.db(process.env.MONGODB_DB);
     // const allUsers = await db.collection(process.env.USERS_COLLECTION).find().toArray();
     // const allUsersEmails = await allUsers.map((user) => { 
-    //     return { params: { username: user.email.split('@gmail.com')[0] } }
-    // })
-    return { paths: [], fallback: true }
+    return { paths: [ ], fallback: true}
 
 }
+ 
 
 export async function getStaticProps(context) {
     const username = context.params.username
