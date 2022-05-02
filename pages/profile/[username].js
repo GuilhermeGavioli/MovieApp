@@ -18,7 +18,8 @@ import { useSession } from "next-auth/react";
 import { useRouter } from "next/router";
 import { useState } from "react";
 
-export default function Username({ votedMovies, basepath, error, foundUser }) {
+
+export default function Username({ votedMovies, basepath, error, foundUser }) { //remove foundUser
   const [showRatingBox, setShowRatingBox] = useState([]);
   const [sliderValue, setSliderValue] = useState(65);
   const [starValue, setStarValue] = useState(3);
@@ -312,6 +313,11 @@ export async function getStaticProps(context) {
 
     const userEmail = context.params.username + "@gmail.com"
     const foundUser = JSON.parse(JSON.stringify(await db.collection(process.env.USERS_COLLECTION).findOne({ email: userEmail })));
+
+    if (!foundUser) { 
+        return { props: { error: true } }
+    }
+
 
     const movies = JSON.parse(JSON.stringify(await db.collection(process.env.COLLECTION).find().toArray()));
     const moviesWhichTheUserHasVoted = []

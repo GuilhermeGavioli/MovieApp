@@ -6,5 +6,6 @@ numero de requests pra cada client
 tamanho de cada requests
 checar tipo de dado
 
+adicionar todos os votos daquele filme na pagina movie/id // 
 
 

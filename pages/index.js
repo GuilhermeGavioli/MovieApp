@@ -1,15 +1,18 @@
-import { Button, Box} from "@mui/material";
-import Router from "next/router";
+import { Box, CircularProgress} from "@mui/material";
+import { useRouter } from "next/router";
+import { useEffect } from "react";
+
 
 export default function Home() { 
-    
+    const router = useRouter();
+
+    useEffect(() => { 
+        router.push('/movies/1');
+    }, [router])
 
     return (
-        <Box sx={{margin: "auto", width: "fit-content"}}>
-       
-            <Button variant="contained" size="large" sx={{ width: '200px', height: '50px', mt: 10 }}
-                onClick={()=>Router.push('/movies/1')}
-            >Movies</Button>
+        <Box sx={{margin: "auto", lineHeight: 20, width: "fit-content"}}>
+            <CircularProgress sx={{color: 'orange'}}/>
         </Box>
 
     )
